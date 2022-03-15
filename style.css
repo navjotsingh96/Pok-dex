@@ -173,6 +173,12 @@ h3 {
     color: white;
     cursor: pointer;
     top: 101px;
+    transition: all 125ms ease-in-out;
+}
+
+.pokemons-card:hover {
+    transform: translateY(-10px);
+    transition: all 125ms ease-in-out;
 }
 
 .pokemon-abiltiy-card div {

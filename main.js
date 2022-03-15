@@ -55,7 +55,9 @@ async function loadPokemonbyUrl(url) {
 
 
 function pokemonTemplate(pokemon) {
-    return `<div class="pokemons-card" id="${pokemon.name}" onclick='showPokemondeatilas("${pokemon.name}")'>
+    let type = pokemon['types'][0]['type']['name'];
+
+    return `<div class="pokemons-card  ${type}" id="${pokemon.name}" onclick='showPokemondeatilas("${pokemon.name}")'>
     <div id="pokiname${pokemon.name}">
         <h2 class="pokimon_name">${pokemon.name}</h2>
         </div>
