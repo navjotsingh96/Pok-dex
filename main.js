@@ -41,7 +41,7 @@ async function loadPokemon() {
 window.onscroll = loadPokemononscroll();
 
 function loadPokemononscroll() {
-    if (window.pageYOffset > 700) {
+    if (window.page > 700) {
         console.log('im hier')
             /*  loadPokemon(); */
     }
@@ -104,7 +104,9 @@ function showPokemondeatilas(pokemonName) {
 
 
 function pokemonHeaderdetails(pokemon) {
-    return `<div class="pokemon-name" id="${pokemon.name}">
+    return `
+    <div class="${pokemon.types[0]['type']['name']} pokemon-header" id="myTry">
+    <div class="pokemon-name" id="${pokemon.name}">
     <h1>${pokemon.name}</h1>
 </div>
 <div class="details_image" id="${pokemon.name}">
@@ -115,6 +117,7 @@ function pokemonHeaderdetails(pokemon) {
 </div>
 <div class="pokemon-type" id="${pokemon.name}">
 <b>Type ${pokemon.types[0]['type']['name']} &</b>
+</div>
 </div>`;
 }
 
@@ -196,7 +199,7 @@ function renderNotfindPokemons(allPokemons) {
     }
 }
 
-function hidecontainer() {
+function hidecontainer(pokemon) {
     document.getElementById('show_details').classList.add('d-none');
     document.getElementById('containertodo').classList.remove('overflow_cont');
 
