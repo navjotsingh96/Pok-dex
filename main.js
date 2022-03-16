@@ -14,16 +14,16 @@ async function loadallPokemons() {
         let pokemonNameasJson = await pokemonName.json();
         allPokemons.push(pokemonNameasJson);
 
-        console.log(pokemonNameasJson);
+        /* console.log(pokemonNameasJson); */
 
     }
 
-    console.log(allPokemons);
+    /* console.log(allPokemons); */
 }
 
 async function loadPokemon() {
 
-    let Url = `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`;
+    let Url = `https://pokeapi.co/api/v2/pokemon?limit=50&offset=${offset}`;
 
     let response = await fetch(Url);
     let responseasJson = await response.json();
@@ -36,7 +36,15 @@ async function loadPokemon() {
 
         renderPokemon(currentpokemon);
     }
-    offset += 20;
+    offset += 40;
+}
+window.onscroll = loadPokemononscroll();
+
+function loadPokemononscroll() {
+    if (window.pageYOffset > 700) {
+        console.log('im hier')
+            /*  loadPokemon(); */
+    }
 }
 
 function renderPokemon(pokemon) {
@@ -166,7 +174,7 @@ function searchPokemon(pokemonName) {
 
     let find = pokemons.filter(p => p.name.startsWith(search));
     let notFindPokemons = allPokemons.filter(a => a.name.startsWith(search));
-    console.log(notFindPokemons);
+    /*   console.log(notFindPokemons); */
     renderSearchPokemons(find);
     renderNotfindPokemons(notFindPokemons);
 }
