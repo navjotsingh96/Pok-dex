@@ -3,6 +3,13 @@ let pokemons = [];
 let offset = 0;
 let allPokemons = [];
 
+/* window.addEventListener('scroll', (event) => {
+    let scroll = this.scrollY;
+    console.log(innerHeight);
+    if (scroll == innerHeight) {
+        console.log('hier')
+    }
+}) */
 async function loadallPokemons() {
     let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1118&offset=0');
     let responseasJson = await response.json();
@@ -13,12 +20,7 @@ async function loadallPokemons() {
         let pokemonName = await fetch(names['url']);
         let pokemonNameasJson = await pokemonName.json();
         allPokemons.push(pokemonNameasJson);
-
-        /* console.log(pokemonNameasJson); */
-
     }
-
-    /* console.log(allPokemons); */
 }
 
 async function loadPokemon() {
@@ -31,20 +33,12 @@ async function loadPokemon() {
 
     for (let i = 0; i < mainSeite.length; i++) {
         let Poki = mainSeite[i];
-        await loadPokemonbyUrl(Poki['url']);
+        await loadPokemonbyUrl(Poki['url'], i);
 
 
         renderPokemon(currentpokemon);
     }
     offset += 40;
-}
-window.onscroll = loadPokemononscroll();
-
-function loadPokemononscroll() {
-    if (window.page > 700) {
-        console.log('im hier')
-            /*  loadPokemon(); */
-    }
 }
 
 function renderPokemon(pokemon) {
@@ -55,10 +49,15 @@ function renderPokemon(pokemon) {
 
 }
 
-async function loadPokemonbyUrl(url) {
+async function loadPokemonbyUrl(url, i) {
     let response = await fetch(url);
     currentpokemon = await response.json();
     pokemons.push(currentpokemon);
+    /*   for (let t = 0; t < pokemons[i]['types'].length; t++) {
+        const types = pokemons[i]['types'][t];
+
+    }
+ */
 }
 
 
@@ -89,7 +88,7 @@ function pokemonTemplate(pokemon) {
 function showPokemondeatilas(pokemonName) {
     let pokemon = pokemons.find(p => p.name === pokemonName); // to filter array to show pokemon from pokemons array
 
-    let pokemonHeader = document.getElementById('pokemon_headeer');
+    let pokemonHeader = document.getElementById('show_pokemon_details');
     let pokemonDeatials = document.getElementById('pokemon_details');
 
     pokemonHeader.innerHTML = '';
@@ -99,11 +98,13 @@ function showPokemondeatilas(pokemonName) {
     document.getElementById('show_details').classList.remove('d-none');
     document.getElementById('containertodo').classList.add('overflow_cont');
 
+
 }
 
 
 
-function pokemonHeaderdetails(pokemon) {
+function pokemonHeaderdetails(pokemon, type) {
+
     return `
     <div class="${pokemon.types[0]['type']['name']} pokemon-header" id="myTry">
     <div class="pokemon-name" id="${pokemon.name}">
@@ -116,10 +117,11 @@ function pokemonHeaderdetails(pokemon) {
        <b>ID #00${pokemon.id}</b>
 </div>
 <div class="pokemon-type" id="${pokemon.name}">
-<b>Type ${pokemon.types[0]['type']['name']} &</b>
+<b>Type ${pokemon.types[0]['type']['name']}</b>
 </div>
 </div>`;
 }
+
 
 function pokemonDetailsETC(pokemon) {
     return `<div class="pokemon-deatils-card">
@@ -177,7 +179,7 @@ function searchPokemon(pokemonName) {
 
     let find = pokemons.filter(p => p.name.startsWith(search));
     let notFindPokemons = allPokemons.filter(a => a.name.startsWith(search));
-    /*   console.log(notFindPokemons); */
+
     renderSearchPokemons(find);
     renderNotfindPokemons(notFindPokemons);
 }
