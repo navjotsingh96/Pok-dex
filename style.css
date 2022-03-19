@@ -68,8 +68,8 @@ h3 {
     align-items: center;
     flex-direction: column;
     background-color: #ed5a5a;
-    width: 30%;
-    height: 593px;
+    width: 35%;
+    height: 480px;
     margin-top: 35px;
     border-radius: 5% 5% 0 0;
 }
@@ -145,7 +145,7 @@ h3 {
 .pokemon-abiltiy-card {
     border-radius: 5% 5% 0 0;
     height: 46vh;
-    width: 30%;
+    width: 35%;
     background-color: white;
     position: absolute;
     top: -35px;
@@ -240,6 +240,7 @@ h3 {
     position: absolute;
     bottom: 0;
     right: 0;
+    width: 40%;
 }
 
 .pokemon-type {

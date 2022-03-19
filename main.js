@@ -3,13 +3,14 @@ let pokemons = [];
 let offset = 0;
 let allPokemons = [];
 
-/* window.addEventListener('scroll', (event) => {
+window.addEventListener('scroll', (event) => {
     let scroll = this.scrollY;
-    console.log(innerHeight);
-    if (scroll == innerHeight) {
-        console.log('hier')
+    console.log(scroll)
+
+    if (scroll == 2773) {
+        console.log(scroll)
     }
-}) */
+})
 async function loadallPokemons() {
     let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1118&offset=0');
     let responseasJson = await response.json();
