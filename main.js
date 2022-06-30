@@ -2,7 +2,7 @@ let currentpokemon;
 let pokemons = [];
 let offset = 0;
 let allPokemons = [];
-let pokemonfromSearch = [];
+let notSaved = [];
 // load function
 
 function onReady(callback) {
@@ -191,21 +191,16 @@ window.onscroll = scrollToBottom;
 
 //Search function
 function searchPokemon(pokemonName) {
-    let findContainer = document.getElementById('findPokemon');
-
     let container = document.getElementById('allPokemons');
     container.innerHTML = '';
     let search = document.getElementById('input_feld').value;
     search = search.toLowerCase();
-    let find = pokemons.filter(p => p.name.startsWith(search));
-    let notFindPokemons = allPokemons.filter(a => a.name.startsWith(search));
+    let find = pokemons.filter(p => p.name.includes(search));
+    let notFindPokemons = allPokemons.filter(a => a.name.includes(search));
     if (find == '') {
-        for (let i = 0; i < notFindPokemons.length; i++) {
-            const notFind = notFindPokemons[i];
-            console.log('notFindPokemons', notFind);
-            downlaodNotFound(notFind);
+        console.log('notFindPokemons', notFindPokemons);
+        downlaodNotFound(notFindPokemons);
 
-        }
     } else
         for (let i = 0; i < find.length; i++) {
             const findMy = find[i];
@@ -216,15 +211,17 @@ function searchPokemon(pokemonName) {
 }
 
 async function downlaodNotFound(download) {
-    console.log('downlaod', download);
+    console.log(download[0]['url']);
+    let url = download[0]['url']
     let container = document.getElementById('allPokemons');
     container.innerHTML = '';
-    let url = download.url;
     let response = await fetch(url);
     let responseasJson = await response.json();
-    findPokemonfromSearch = responseasJson;
-    console.log(findPokemonfromSearch);
-    container.innerHTML += renderSerachPokemon(findPokemonfromSearch)
+    notSaved = responseasJson;
+    pokemons.push(notSaved);
+    console.log(notSaved);
+    container.innerHTML += pokemonTemplate(notSaved)
+
 }
 
 function renderSerachPokemon(pokemon) {
@@ -249,84 +246,20 @@ function renderSerachPokemon(pokemon) {
 }
 
 function showDetais(pokemonName) {
-    let pokemon = pokemonfromSearch.find(f => f.name === pokemonName); // to filter array to show pokemon from pokemons array
-
+    let pokemonFind = notSaved.find(f => f.name === pokemonName); // to filter array to show pokemon from pokemons array
+    console.log('PokemonFind', pokemonFind);
     let pokemonHeader = document.getElementById('show_pokemon_details');
     let pokemonDeatials = document.getElementById('pokemon_details');
 
     pokemonHeader.innerHTML = '';
     pokemonDeatials.innerHTML = '';
-    pokemonHeader.innerHTML = pokemonHeaderdetails(pokemon);
-    pokemonDeatials.innerHTML = pokemonDetailsETC(pokemon)
+    pokemonHeader.innerHTML = pokemonHeaderdetails(pokemonFind);
+    pokemonDeatials.innerHTML = pokemonDetailsETC(pokemonFind)
     document.getElementById('show_details').classList.remove('d-none');
     document.getElementById('containertodo').classList.add('overflow_cont');
 
 }
 
-
-/* 
-    for (let a = 0; a < pokemons.length; a++) {
-        let meinPoki = pokemons[a];
-        console.log('es ist pokemons', meinPoki);
-        console.log(find)
-        findContainer.innerHTML += `
-                <div class="pokedex-card">
-                    <div class="pokedex-card-header">
-                        <img src="${meinPoki['name']}" class="pokemon-img">
-                    </div>
-                    <div class="pokedex-card-body">
-                        <p>ID: ${meinPoki['id']} Name: ${meinPoki['name']}</p>
-                    </div>
-                </div>
-            `;
-
-        {
-
-            findContainer.innerHTML += `
-                       <div class="pokedex-card">
-                           <div class="pokedex-card-header">
-                               <img src="${meinPoki['sprites']['other']['dream_world']['front_default']}" class="pokemon-img">
-                           </div>
-                           <div class="pokedex-card-body">
-                               <p>ID: ${meinPoki['id']} Name: ${meinPoki['name']}</p>
-                           </div>
-                       </div>
-                   `;
-
-        }
-
-        renderSearchPokemons(find);
-        renderNotfindPokemons(notFindPokemons);
-    }
-}
-
-
-function renderSearchPokemons(pokemons) {
-    let findContainer = document.getElementById('findPokemon');
-    findContainer.innerHTML = '';
-    for (let n = 0; n < pokemons.length; n++) {
-        findContainer.innerHTML += renderSeaechPoki(pokemons[n]);
-    }
-}
-
-function renderNotfindPokemons(allPokemons) {
-    let findContainer = document.getElementById('findPokemon');
-    findContainer.innerHTML = '';
-    for (let z = 0; z < allPokemons.length; z++) {
-        console.log(allPokemons[z])
-        findContainer.innerHTML += renderSeaechPoki(allPokemons[z]);
-
-    }
-}
-
-function renderSeaechPoki(search) {
-    return `
-    <div class="pokemons">
-    <div> ${search['name']}
-    </div>`;
-
-}
-*/
 function hidecontainer(pokemon) {
     document.getElementById('show_details').classList.add('d-none');
     document.getElementById('containertodo').classList.remove('overflow_cont');
