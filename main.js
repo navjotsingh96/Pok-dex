@@ -3,6 +3,8 @@ let pokemons = [];
 let offset = 0;
 let allPokemons = [];
 let notSaved = [];
+let loadingPage = true;
+
 // load function
 
 function onReady(callback) {
@@ -18,12 +20,10 @@ function setVisible(selector, visible) {
     document.querySelector(selector).style.display = visible ? 'block' : 'none';
 }
 
-onReady(function() {
-    setVisible('.page', true);
-    setVisible('#loading', false);
-});
+
 
 // till here 
+
 async function loadallPokemons() {
     let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1118&offset=0');
     let responseasJson = await response.json();
@@ -50,14 +50,22 @@ async function loadPokemon() {
         renderPokemon(currentpokemon);
     }
     offset += 100;
-
-
 }
+
+
 
 function renderPokemon(pokemon) {
     let container = document.getElementById('allPokemons');
     container.innerHTML += pokemonTemplate(pokemon);
+    loadingPage = false;
+    if (loadingPage === false) {
+        onReady(function() {
+            setVisible('.page', true);
+            setVisible('#loading', false);
+        });
+    }
 }
+
 
 async function loadPokemonbyUrl(url, i) {
     let response = await fetch(url);
@@ -68,110 +76,104 @@ async function loadPokemonbyUrl(url, i) {
 
 function pokemonTemplate(pokemon) {
     let type = pokemon['types'][0]['type']['name'];
-
     return `<div class="pokemons-card  ${type}" id="${pokemon.name}" onclick='showPokemondeatilas("${pokemon.name}")'>
-    <div id="pokiname${pokemon.name}">
-        <h2 class="pokimon_name">${pokemon.name}</h2>
-        </div>
-           <div class="poki_id" id="poki_id${pokemon.name}">
-               <h3><b>ID #00${pokemon.id}</b></h3>
-           </div>
-                <div class="poki_type" id="poki_type${pokemon.name}">
-                     ${pokemon['types'][0]['type']['name']}
-          </div>
-    <div id="poki_images${pokemon.name}">
-       <img class="pokemon_img" src="${pokemon['sprites']['other']['home']['front_default']}">
-    </div>
-
-   
-</div>`;
-
+                          <div id="pokiname${pokemon.name}">
+                               <h2 class="pokimon_name">${pokemon.name}</h2>
+                         </div>
+                        
+                         <div class="poki_id" id="poki_id${pokemon.name}">
+                               <h3><b>ID #00${pokemon.id}</b></h3>
+                         </div>
+                         <div class="poki_type" id="poki_type${pokemon.name}">
+                               ${pokemon['types'][0]['type']['name']}
+                        </div>
+                         <div id="poki_images${pokemon.name}">
+                                <img class="pokemon_img" src="${pokemon['sprites']['other']['home']['front_default']}">
+                        </div>
+            </div>`;
 }
 
 
-
+// show and pokemons Pokemondetails 
 function showPokemondeatilas(pokemonName) {
     let pokemon = pokemons.find(p => p.name === pokemonName); // to filter array to show pokemon from pokemons array
-
     let pokemonHeader = document.getElementById('show_pokemon_details');
     let pokemonDeatials = document.getElementById('pokemon_details');
-
     pokemonHeader.innerHTML = '';
     pokemonDeatials.innerHTML = '';
     pokemonHeader.innerHTML = pokemonHeaderdetails(pokemon);
     pokemonDeatials.innerHTML = pokemonDetailsETC(pokemon)
     document.getElementById('show_details').classList.remove('d-none');
     document.getElementById('containertodo').classList.add('overflow_cont');
-
-
 }
 
 
 
 function pokemonHeaderdetails(pokemon) {
-
     return `
-    <div class="${pokemon.types[0]['type']['name']} pokemon-header" id="myTry">
-    <div class="pokemon-name" id="${pokemon.name}">
-    <h1>${pokemon.name}</h1>
-</div>
-<div class="details_image" id="${pokemon.name}">
-   <img class="pokemon_img pokemon-absolute" src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
-</div>
-   <div class="pokemon-id" id="${pokemon.name}">
-       <b>ID #00${pokemon.id}</b>
-</div>
-<div class="pokemon-type" id="${pokemon.name}">
-<b>Type ${pokemon.types[0]['type']['name']}</b>
-</div>
-</div>`;
+         <div class="${pokemon.types[0]['type']['name']} pokemon-header" id="myTry">
+            <div class="pokemon-name" id="${pokemon.name}">
+                <h1>${pokemon.name}</h1>
+            </div>
+            <div class="details_image" id="${pokemon.name}">
+                <img class="pokemon_img pokemon-absolute" src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
+            </div>
+            <div class="pokemon-id" id="${pokemon.name}">
+                 <b>ID #00${pokemon.id}</b>
+            </div>
+            <div class="pokemon-type" id="${pokemon.name}">
+                <b>Type ${pokemon.types[0]['type']['name']}</b>
+            </div>
+        </div>`;
 }
 
 
 function pokemonDetailsETC(pokemon) {
-    return `<div class="pokemon-deatils-card">
+    return `
+    <div class="pokemon-deatils-card">
+    
+        <div class="display-flex" id="${pokemon.name}">
+            <h3> Height:</h3> <span class="m-left-20"> ${pokemon.height}</span>
+        </div>
 
-            <div class="display-flex" id="${pokemon.name}">
-                <h3> Height:</h3> <span class="m-left-20"> ${pokemon.height}</span>
-            </div>
-             <div class="display-flex" id="${pokemon.name}">
-                 <h3> Weight :</h3> <span class="m-left-20"> ${pokemon.weight}</span>
-            </div>
-             <div class="display-flex" id="${pokemon.name}">
-                 <h3> Abilities:</h3> <span class="m-left-20"> ${pokemon.abilities[0]['ability']['name']},
-                         ${pokemon.abilities[1]['ability']['name']} </span>
-             </div>
-             <div class="display-flex" id="${pokemon.name}">
-                 <h3> Baseexperience:</h3> <span class="m-left-20"> ${pokemon.base_experience}</span>
-             </div>
+        <div class="display-flex" id="${pokemon.name}">
+            <h3> Weight :</h3> <span class="m-left-20"> ${pokemon.weight}</span>
+        </div>
 
-             <div class="display-flex">
-                 <h3> HP:</h3> <span class="m-left-20"> ${pokemon.stats[0]['base_stat']}</span>
-                 </div>
-            <div class="display-flex">
-                 <h3> Attack:</h3> <span class="m-left-20"> ${pokemon.stats[1]['base_stat']}</span>
+        <div class="display-flex" id="${pokemon.name}">
+            <h3> Abilities:</h3> <span class="m-left-20"> ${pokemon.abilities[0]['ability']['name']},
+                 ${pokemon.abilities[1]['ability']['name']} </span>
+        </div>
+
+        <div class="display-flex" id="${pokemon.name}">
+            <h3> Baseexperience:</h3> <span class="m-left-20"> ${pokemon.base_experience}</span>
+        </div>
+
+        <div class="display-flex">
+            <h3> HP:</h3> <span class="m-left-20"> ${pokemon.stats[0]['base_stat']}</span>
+        </div>
+
+        <div class="display-flex">
+            <h3> Attack:</h3> <span class="m-left-20"> ${pokemon.stats[1]['base_stat']}</span>
+        </div>
+
+         <div class="display-flex">
+            <h3> Defense:</h3> <span class="m-left-20"> ${pokemon.stats[2]['base_stat']}</span>
             </div>
-             <div class="display-flex">
-                 <h3> Defense:</h3> <span class="m-left-20"> ${pokemon.stats[2]['base_stat']}</span>
-                 </div>
-            <div class="display-flex">
-                 <h3> Special-Attack:</h3> <span class="m-left-20"> ${pokemon.stats[3]['base_stat']}</span>
-                 </div>
-           <div class="display-flex">
-                    <h3> Special-Defense:</h3> <span class="m-left-20"> ${pokemon.stats[4]['base_stat']}</span>
-             </div>
+
+         <div class="display-flex">
+            <h3> Special-Attack:</h3> <span class="m-left-20"> ${pokemon.stats[3]['base_stat']}</span>
+            </div>
+
+        <div class="display-flex">
+            <h3> Special-Defense:</h3> <span class="m-left-20"> ${pokemon.stats[4]['base_stat']}</span>
+        </div>
                     
-                    <div class="display-flex">
-                    
-                    <h3> Speed:</h3> <span class="m-left-20"> ${pokemon.stats[5]['base_stat']}</span>
-             </div>
-                    </div>
+        <div class="display-flex">          
+            <h3> Speed:</h3> <span class="m-left-20"> ${pokemon.stats[5]['base_stat']}</span>
+        </div>
+     </div>
          `;
-}
-
-function loadmorePokemon() {
-    loadPokemon();
-
 }
 
 // Load more Pokemons on load
@@ -192,75 +194,34 @@ window.onscroll = scrollToBottom;
 //Search function
 function searchPokemon(pokemonName) {
     let container = document.getElementById('allPokemons');
-    container.innerHTML = '';
     let search = document.getElementById('input_feld').value;
     search = search.toLowerCase();
+    container.innerHTML = '';
     let find = pokemons.filter(p => p.name.includes(search));
     let notFindPokemons = allPokemons.filter(a => a.name.includes(search));
     if (find == '') {
-        console.log('notFindPokemons', notFindPokemons);
         downlaodNotFound(notFindPokemons);
-
     } else
         for (let i = 0; i < find.length; i++) {
             const findMy = find[i];
-            console.log('Find', findMy);
             container.innerHTML += pokemonTemplate(findMy);
         }
 
 }
-
+// download not find pokemons from allPOkemmons array and pushed to pokemon array
 async function downlaodNotFound(download) {
-    console.log(download[0]['url']);
     let url = download[0]['url']
     let container = document.getElementById('allPokemons');
     container.innerHTML = '';
     let response = await fetch(url);
     let responseasJson = await response.json();
     notSaved = responseasJson;
-    pokemons.push(notSaved);
-    console.log(notSaved);
     container.innerHTML += pokemonTemplate(notSaved)
 
 }
 
-function renderSerachPokemon(pokemon) {
-    let type = pokemon['types'][0]['type']['name'];
 
-    return `<div class="pokemons-card  ${type}" id="${pokemon.name}" onclick='showDetais("${pokemon.name}")'>
-    <div id="pokiname${pokemon.name}">
-        <h2 class="pokimon_name">${pokemon.name}</h2>
-        </div>
-           <div class="poki_id" id="poki_id${pokemon.name}">
-               <h3><b>ID #00${pokemon.id}</b></h3>
-           </div>
-                <div class="poki_type" id="poki_type${pokemon.name}">
-                     ${pokemon['types'][0]['type']['name']}
-          </div>
-    <div id="poki_images${pokemon.name}">
-       <img class="pokemon_img" src="${pokemon['sprites']['other']['home']['front_default']}">
-    </div>
-
-   
-</div>`;
-}
-
-function showDetais(pokemonName) {
-    let pokemonFind = notSaved.find(f => f.name === pokemonName); // to filter array to show pokemon from pokemons array
-    console.log('PokemonFind', pokemonFind);
-    let pokemonHeader = document.getElementById('show_pokemon_details');
-    let pokemonDeatials = document.getElementById('pokemon_details');
-
-    pokemonHeader.innerHTML = '';
-    pokemonDeatials.innerHTML = '';
-    pokemonHeader.innerHTML = pokemonHeaderdetails(pokemonFind);
-    pokemonDeatials.innerHTML = pokemonDetailsETC(pokemonFind)
-    document.getElementById('show_details').classList.remove('d-none');
-    document.getElementById('containertodo').classList.add('overflow_cont');
-
-}
-
-function hidecontainer(pokemon) {
+function hidecontainer() {
     document.getElementById('show_details').classList.add('d-none');
     document.getElementById('containertodo').classList.remove('overflow_cont');
 }
