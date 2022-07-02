@@ -112,8 +112,8 @@ h3 {
 
 #show_details {
     z-index: 7;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
@@ -370,8 +370,8 @@ h3 {
 
 .background {
     position: fixed;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     top: 0;
     left: 0;
     background: #66547d;
@@ -784,7 +784,6 @@ svg {
 
 .page {
     display: none;
-    padding: 0 0.5em;
 }
 
 .page h1 {

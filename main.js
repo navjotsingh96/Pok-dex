@@ -216,7 +216,8 @@ async function downlaodNotFound(download) {
     let response = await fetch(url);
     let responseasJson = await response.json();
     notSaved = responseasJson;
-    container.innerHTML += pokemonTemplate(notSaved)
+    pokemons.push(notSaved);
+    container.innerHTML += pokemonTemplate(notSaved);
 
 }
 
