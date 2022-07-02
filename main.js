@@ -4,8 +4,10 @@ let offset = 0;
 let allPokemons = [];
 let notSaved = [];
 let loadingPage = true;
+let loadmorePokemon = false;
 
 // load function
+
 
 function onReady(callback) {
     var intervalId = window.setInterval(function() {
@@ -180,12 +182,20 @@ function pokemonDetailsETC(pokemon) {
 function scrollToBottom() {
 
     let container = document.getElementById('allPokemons');
-    let contentHeight = container.offsetHeight - 500;
+    let contentHeight = container.offsetHeight - 800;
     let yOffset = window.pageYOffset;
     let y = yOffset + window.innerHeight;
+    loadmorePokemon = true;
     if (y >= contentHeight) {
+        loadmorePokemon = true;
+        if (loadmorePokemon === true) {
+            loadPokemon();
 
-        loadPokemon();
+        }
+
+    } else {
+        loadmorePokemon = false;
+
     }
 }
 window.onscroll = scrollToBottom;
