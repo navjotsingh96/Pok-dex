@@ -17,7 +17,9 @@
     <link rel="stylesheet" href="colors.css">
     <script src="main.js"></script>
 
-    <body onload="loadPokemon(), loadallPokemons()">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <body onload="loadPokemon(), loadAllPokemons()">
 
         <div class="container page" id="containertodo">
             <div class="background">
@@ -51,16 +53,13 @@
                 <div class="search" id="serach_bar">
                     <input type="text" id="input_feld" placeholder="Search..." onkeyup="searchPokemon()">
                 </div>
+                <div class="imprint"><a href="impresumm.html">Impressum</a> </div>
             </div>
-
-
             <div id="show_details" class="d-none" onclick="hidecontainer()">
                 <div id="show_pokemon_details">
                     <div class="pokemon-header" id="pokemon_headeer">
-
                         <h1 id="pokemon_name_detail">Pokemon</h1>
                     </div>
-
                     <div id="pokemon_img_detail"></div>
                 </div>
                 <div class="pokemon_card">
@@ -69,18 +68,13 @@
                     </div>
                 </div>
             </div>
-
             <div id="allPokeomons-container">
                 <div class="pokemon-container" id="findPokemon"></div>
-
                 <div class="pokemon-container" id="allPokemons">
-
                 </div>
             </div>
-
-
-
         </div>
+
         <div id="loading" class="loader">
             <svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 330 331.7" enable-background="new 0 0 330 331.7" xml:space="preserve">
               <circle id="center" fill="#FFFFFF" cx="165" cy="165.9" r="36.5"/>
@@ -108,7 +102,6 @@
         </svg>
 
         </div>
-
     </body>
 
 </html>

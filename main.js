@@ -3,7 +3,7 @@ let pokemons = [];
 let offset = 0;
 let allPokemons = [];
 let notSaved = [];
-let loadingPage = true;
+let loadingAnimation = true;
 let loadmorePokemon = false;
 
 // load function
@@ -25,8 +25,8 @@ function setVisible(selector, visible) {
 
 
 // till here 
-
-async function loadallPokemons() {
+//load all pokemons from API
+async function loadAllPokemons() {
     let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1118&offset=0');
     let responseasJson = await response.json();
     allPokemons = responseasJson['results'];
@@ -38,34 +38,38 @@ async function loadallPokemons() {
     }
 }
 
+// Pokemons details from API
 async function loadPokemon() {
-
     let Url = `https://pokeapi.co/api/v2/pokemon?limit=100&offset=${offset}`;
-
     let response = await fetch(Url);
     let responseasJson = await response.json();
     let mainSeite = responseasJson['results'];
-
     for (let i = 0; i < mainSeite.length; i++) {
         let Poki = mainSeite[i];
         await loadPokemonbyUrl(Poki['url'], i);
         renderPokemon(currentpokemon);
     }
-    offset += 100;
+    console.log('Fertig');
+    loadmorePokemon = false;
+    offset += 50;
+    loadingAnimation = false;
+    hideLoadingAnimation();
 }
 
-
-
-function renderPokemon(pokemon) {
-    let container = document.getElementById('allPokemons');
-    container.innerHTML += pokemonTemplate(pokemon);
-    loadingPage = false;
-    if (loadingPage === false) {
+function hideLoadingAnimation() {
+    if (!loadingAnimation) {
         onReady(function() {
             setVisible('.page', true);
             setVisible('#loading', false);
         });
     }
+}
+
+
+function renderPokemon(pokemon) {
+    let container = document.getElementById('allPokemons');
+    container.innerHTML += pokemonTemplate(pokemon);
+
 }
 
 
@@ -92,6 +96,7 @@ function pokemonTemplate(pokemon) {
                          <div id="poki_images${pokemon.name}">
                                 <img class="pokemon_img" src="${pokemon['sprites']['other']['home']['front_default']}">
                         </div>
+
             </div>`;
 }
 
@@ -114,6 +119,8 @@ function showPokemondeatilas(pokemonName) {
 function pokemonHeaderdetails(pokemon) {
     return `
          <div class="${pokemon.types[0]['type']['name']} pokemon-header" id="myTry">
+    <div class="click"> Click anywere to close Pokemon</div>
+
             <div class="pokemon-name" id="${pokemon.name}">
                 <h1>${pokemon.name}</h1>
             </div>
@@ -121,10 +128,10 @@ function pokemonHeaderdetails(pokemon) {
                 <img class="pokemon_img pokemon-absolute" src="${pokemon['sprites']['other']['official-artwork']['front_default']}">
             </div>
             <div class="pokemon-id" id="${pokemon.name}">
-                 <b>ID #00${pokemon.id}</b>
+                 <b>ID <span class="color-white">#00${pokemon.id}</span></b>
             </div>
             <div class="pokemon-type" id="${pokemon.name}">
-                <b>Type ${pokemon.types[0]['type']['name']}</b>
+                <b>Type <span class="color-white">${pokemon.types[0]['type']['name']}</span></b>
             </div>
         </div>`;
 }
@@ -177,28 +184,34 @@ function pokemonDetailsETC(pokemon) {
      </div>
          `;
 }
-
+let enbaleScroll = false;
 // Load more Pokemons on load
-function scrollToBottom() {
-
+async function scrollToBottom() {
     let container = document.getElementById('allPokemons');
-    let contentHeight = container.offsetHeight - 800;
+    let contentHeight = container.offsetHeight - 900;
     let yOffset = window.pageYOffset;
     let y = yOffset + window.innerHeight;
-    loadmorePokemon = true;
     if (y >= contentHeight) {
+        console.log('True');
+        enbaleScroll = true;
         loadmorePokemon = true;
-        if (loadmorePokemon === true) {
-            loadPokemon();
-
-        }
+        await loadOnscroll();
 
     } else {
+        enbaleScroll = false;
         loadmorePokemon = false;
 
     }
 }
 window.onscroll = scrollToBottom;
+
+async function loadOnscroll() {
+    if (enbaleScroll && loadmorePokemon) {
+        loadmorePokemon = false;
+        enbaleScroll = false;
+        await loadPokemon();
+    }
+}
 
 
 //Search function
@@ -235,4 +248,9 @@ async function downlaodNotFound(download) {
 function hidecontainer() {
     document.getElementById('show_details').classList.add('d-none');
     document.getElementById('containertodo').classList.remove('overflow_cont');
+}
+
+function imprint() {
+    let imprintContainer = document.getElementById('imprint');
+    imprintContainer.classList.toggle('d-none')
 }
