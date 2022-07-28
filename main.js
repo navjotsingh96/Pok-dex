@@ -40,7 +40,7 @@ async function loadAllPokemons() {
 
 // Pokemons details from API
 async function loadPokemon() {
-    let Url = `https://pokeapi.co/api/v2/pokemon?limit=100&offset=${offset}`;
+    let Url = `https://pokeapi.co/api/v2/pokemon?limit=50&offset=${offset}`;
     let response = await fetch(Url);
     let responseasJson = await response.json();
     let mainSeite = responseasJson['results'];
@@ -49,7 +49,6 @@ async function loadPokemon() {
         await loadPokemonbyUrl(Poki['url'], i);
         renderPokemon(currentpokemon);
     }
-    console.log('Fertig');
     loadmorePokemon = false;
     offset += 50;
     loadingAnimation = false;
@@ -192,24 +191,24 @@ async function scrollToBottom() {
     let yOffset = window.pageYOffset;
     let y = yOffset + window.innerHeight;
     if (y >= contentHeight) {
-        console.log('True');
         enbaleScroll = true;
         loadmorePokemon = true;
         await loadOnscroll();
+        enbaleScroll = false;
+        loadmorePokemon = false;
 
     } else {
         enbaleScroll = false;
         loadmorePokemon = false;
-
     }
 }
 window.onscroll = scrollToBottom;
 
 async function loadOnscroll() {
     if (enbaleScroll && loadmorePokemon) {
+        await loadPokemon();
         loadmorePokemon = false;
         enbaleScroll = false;
-        await loadPokemon();
     }
 }
 
@@ -248,9 +247,4 @@ async function downlaodNotFound(download) {
 function hidecontainer() {
     document.getElementById('show_details').classList.add('d-none');
     document.getElementById('containertodo').classList.remove('overflow_cont');
-}
-
-function imprint() {
-    let imprintContainer = document.getElementById('imprint');
-    imprintContainer.classList.toggle('d-none')
 }
