@@ -219,6 +219,13 @@ h3 {
 .pokemon_img {
     width: 50%;
     z-index: 2;
+    transition: all 225ms ease-in-out;
+}
+
+.pokemon_img:hover {
+    transition: all 225ms ease-in-out;
+    transform: scale(1.5);
+    z-index: 99;
 }
 
 #show_details {
@@ -299,11 +306,6 @@ h3 {
     color: white;
     cursor: pointer;
     top: 101px;
-    transition: all 125ms ease-in-out;
-}
-
-.pokemons-card:hover {
-    transform: translateY(-10px);
     transition: all 125ms ease-in-out;
 }
 

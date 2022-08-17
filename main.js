@@ -1,6 +1,7 @@
 let currentpokemon;
 let pokemons = [];
 let offset = 0;
+let limit = 50;
 let allPokemons = [];
 let notSaved = [];
 let loadingAnimation = true;
@@ -39,9 +40,19 @@ async function loadAllPokemons() {
     }
 }
 
+function waitForOffset() {
+
+    limit += 10;
+    offset += limit;
+
+    console.log(limit, offset);
+
+    loadPokemon()
+}
+
 // Pokemons details from API
 async function loadPokemon() {
-    let Url = `https://pokeapi.co/api/v2/pokemon?limit=50&offset=${offset}`;
+    let Url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
     let response = await fetch(Url);
     let responseasJson = await response.json();
     let mainSeite = responseasJson['results'];
@@ -51,10 +62,10 @@ async function loadPokemon() {
         renderPokemon(currentpokemon);
     }
     loadmorePokemon = false;
-    offset += 20;
     loadingAnimation = false;
     scrollLoad = true;
     hideLoadingAnimation();
+    console.log(limit);
 }
 
 function hideLoadingAnimation() {
@@ -151,8 +162,8 @@ function pokemonDetailsETC(pokemon) {
         </div>
 
         <div class="display-flex" id="${pokemon.name}">
-            <h3> Abilities:</h3> <span class="m-left-20"> ${pokemon.abilities[0]['ability']['name']},
-                 ${pokemon.abilities[1]['ability']['name']} </span>
+            <h3> Abilities:</h3> <span class="m-left-20"> ${pokemon?.abilities[0]['ability']['name']},
+                 ${pokemon?.abilities[1]['ability']['name']} </span>
         </div>
 
         <div class="display-flex" id="${pokemon.name}">
@@ -220,12 +231,13 @@ async function downlaodNotFound(download) {
 window.addEventListener('scroll', infiniteScroll);
 
 // to Load pokemons on Scroll
-function infiniteScroll() {
+async function infiniteScroll() {
     let contianer = document.getElementById('allPokemons')
     if (Math.floor(window.innerHeight + window.scrollY - 150) > (contianer.offsetHeight - 800) && scrollLoad) {
+
         scrollLoad = false;
-        loadPokemon();
-        console.log('Scroll', contianer.offsetHeight);
+        await waitForOffset();
+        console.log('Scroll', limit, offset);
     }
 }
 
