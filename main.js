@@ -5,6 +5,7 @@ let allPokemons = [];
 let notSaved = [];
 let loadingAnimation = true;
 let loadmorePokemon = false;
+let scrollLoad = true;
 
 // load function
 
@@ -50,8 +51,9 @@ async function loadPokemon() {
         renderPokemon(currentpokemon);
     }
     loadmorePokemon = false;
-    offset += 50;
+    offset += 20;
     loadingAnimation = false;
+    scrollLoad = true;
     hideLoadingAnimation();
 }
 
@@ -183,34 +185,6 @@ function pokemonDetailsETC(pokemon) {
      </div>
          `;
 }
-let enbaleScroll = false;
-// Load more Pokemons on load
-async function scrollToBottom() {
-    let container = document.getElementById('allPokemons');
-    let contentHeight = container.offsetHeight - 900;
-    let yOffset = window.pageYOffset;
-    let y = yOffset + window.innerHeight;
-    if (y >= contentHeight) {
-        enbaleScroll = true;
-        loadmorePokemon = true;
-        await loadOnscroll();
-        enbaleScroll = false;
-        loadmorePokemon = false;
-
-    } else {
-        enbaleScroll = false;
-        loadmorePokemon = false;
-    }
-}
-window.onscroll = scrollToBottom;
-
-async function loadOnscroll() {
-    if (enbaleScroll && loadmorePokemon) {
-        await loadPokemon();
-        loadmorePokemon = false;
-        enbaleScroll = false;
-    }
-}
 
 
 //Search function
@@ -230,6 +204,7 @@ function searchPokemon(pokemonName) {
         }
 
 }
+
 // download not find pokemons from allPOkemmons array and pushed to pokemon array
 async function downlaodNotFound(download) {
     let url = download[0]['url']
@@ -241,6 +216,17 @@ async function downlaodNotFound(download) {
     pokemons.push(notSaved);
     container.innerHTML += pokemonTemplate(notSaved);
 
+}
+window.addEventListener('scroll', infiniteScroll);
+
+// to Load pokemons on Scroll
+function infiniteScroll() {
+    let contianer = document.getElementById('allPokemons')
+    if (Math.floor(window.innerHeight + window.scrollY - 150) > (contianer.offsetHeight - 800) && scrollLoad) {
+        scrollLoad = false;
+        loadPokemon();
+        console.log('Scroll', contianer.offsetHeight);
+    }
 }
 
 
