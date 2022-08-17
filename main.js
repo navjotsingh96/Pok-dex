@@ -41,12 +41,8 @@ async function loadAllPokemons() {
 }
 
 function waitForOffset() {
-
     limit += 10;
     offset += limit;
-
-    console.log(limit, offset);
-
     loadPokemon()
 }
 
@@ -65,7 +61,6 @@ async function loadPokemon() {
     loadingAnimation = false;
     scrollLoad = true;
     hideLoadingAnimation();
-    console.log(limit);
 }
 
 function hideLoadingAnimation() {
@@ -234,10 +229,8 @@ window.addEventListener('scroll', infiniteScroll);
 async function infiniteScroll() {
     let contianer = document.getElementById('allPokemons')
     if (Math.floor(window.innerHeight + window.scrollY - 150) > (contianer.offsetHeight - 800) && scrollLoad) {
-
         scrollLoad = false;
         await waitForOffset();
-        console.log('Scroll', limit, offset);
     }
 }
 
